@@ -1,5 +1,96 @@
 [
   {
+    "objectID": "multivariate_workshop_in_SAS.html#todays-goal",
+    "href": "multivariate_workshop_in_SAS.html#todays-goal",
+    "title": "Multivariate Analysis in SAS",
+    "section": "Today’s goal",
+    "text": "Today’s goal\nBy the end of this workshop you can:\n\nExplain what multivariate data is!\nChoose a method based on the Objective.\nRun each method in R and interpret results"
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#what-is-multivariate-data",
+    "href": "multivariate_workshop_in_SAS.html#what-is-multivariate-data",
+    "title": "Multivariate Analysis in SAS",
+    "section": "What is multivariate data?",
+    "text": "What is multivariate data?\nIn a Multivariate case we observe multiple variables(responses) per unit.\nExample:\n\na patient’s health records tracking cholesterol, blood pressure, and weight\ncar data (MPG, horsepower, weight)\nhouse features (size, bedrooms, price)\ndataset assessing crop yield, Soil pH, Nitrogen Level, Irrigation Amount and Avg. Temperature"
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#univariate-vs-multivariate-quick-picture",
+    "href": "multivariate_workshop_in_SAS.html#univariate-vs-multivariate-quick-picture",
+    "title": "Multivariate Analysis in SAS",
+    "section": "Univariate vs multivariate (quick picture)",
+    "text": "Univariate vs multivariate (quick picture)\n\nUnivariate: one response (e.g., compare yield for different Soil pH levels)\nMultivariate: multiple responses\n(e.g., compare yield across different Soil pH levels, Nitrogen Levels, Irrigation Amounts, and Avg.) Temperature)\n\nMultivariate methods help avoid: - running many separate tests - missing joint patterns"
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#why-multivariate-methods",
+    "href": "multivariate_workshop_in_SAS.html#why-multivariate-methods",
+    "title": "Multivariate Analysis in SAS",
+    "section": "Why multivariate methods?",
+    "text": "Why multivariate methods?\n\nTo see the big picture. The more variable the better it is.\n\n\nMany variables are correlated\nWe want summary patterns, groups, or group differences across several outcomes"
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#workflow-checklist-always",
+    "href": "multivariate_workshop_in_SAS.html#workflow-checklist-always",
+    "title": "Multivariate Analysis in SAS",
+    "section": "Workflow checklist (always)",
+    "text": "Workflow checklist (always)\n\nIdentify the Objective\nChoose variables (numeric vs categorical)\nClean data: missing values, outliers\nDecide whether to standardize (usually yes for PCA & clustering)\nFit model + interpret output\nCommunicate the results in simple words"
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#choosing-technique-based-on-objective",
+    "href": "multivariate_workshop_in_SAS.html#choosing-technique-based-on-objective",
+    "title": "Multivariate Analysis in SAS",
+    "section": "Choosing technique based on objective",
+    "text": "Choosing technique based on objective\n\n\nPredict or Explain\n\n\nMultiple Regression\nLogistic Regression\nDiscriminant Analysis\n\n\n\n\nReduce complexity (Dimension reduction)\n\n\nPrincipal Component Analysis (PCA)\nFactor Analysis (FA)\n\n\n\n\nFind Groups (unsupervised learning)\n\n\nCluster Analysis (CA)\nMultidimensional Scaling\n\n\n\n\nUnderstand relationships between sets of variables\n\n\nCanonical Correlation Analysis (CCA)\nStructural Equation Modeling\n\n\n\n\nCompare groups on multiple outcomes\n\n\nMultivariate Analysis of Variance (MANOVA)"
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#PCA",
+    "href": "multivariate_workshop_in_SAS.html#PCA",
+    "title": "Multivariate Analysis in SAS",
+    "section": "PCA",
+    "text": "PCA\n\n“In the next 2 minutes, I’m going to show you how PCA can take complex agricultural data and make it simple enough to understand at a glance. Let’s dive in!” TIMING: 10 seconds\n\nA statistical technique that transforms correlated variables into a smaller set of uncorrelated variables called principal components.\n\nImagine a pencil • Side view: Long & detailed • End view: Just a circle\nPCA finds the “side view” The angle that shows the most variation and information\n\nWhy use PCA\n\n\n\nDimensionality Reduction\nRemove Redundancy\nFeature Engineering\n\n\n\nData Visualization\nNoise Reduction\nSpeed up Analysis\n\n\nWhen to use PCA\n\n\nGood Scenarios:\n\nMany correlated variables (r &gt; 0.7)\nNeed to visualize complex data\nAll variables are numeric/continuous\nVariables measured on similar scales\nExploratory data analysis\nPre-processing for ML models\n\n\nNot Recommended When:\n\nVariables are independent (not correlated)\nNeed to interpret original variables\nCategorical/binary variables only\nSmall sample size (n &lt; 50)\nMissing data is widespread\nVariables on very different scales (unless standardized)\n\n\n\nTip: Check correlation matrix first! If most correlations &lt; 0.3, PCA may not help much."
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#CA",
+    "href": "multivariate_workshop_in_SAS.html#CA",
+    "title": "Multivariate Analysis in SAS",
+    "section": "CA",
+    "text": "CA\nCluster Analysis is an unsupervised method that groups observations (fields, farms, samples, people) so that:\n\n\nitems within the same cluster are similar, and\nitems in different clusters are different\nbased on the variables chosen (usually numeric variables).\n\nWhy use CA\n\n\ndiscover types/profiles in your data (e.g. “field types”)\nsimplify a complex dataset into a few understandable groups\nsupport decision-making (e.g., “these fields behave similarly, manage them similarly”)\nidentify unusual observations (outliers often show up as small or isolated clusters)\n\n\nWhen to use CA\n\n\ndo not have labeled groups already (no “true classes”)\nhave several variables and suspect there are hidden patterns\ngoal is exploration: “What kinds of observations exist here?”"
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#example",
+    "href": "multivariate_workshop_in_SAS.html#example",
+    "title": "Multivariate Analysis in SAS",
+    "section": "Example",
+    "text": "Example\nWe’ll use a dataset:\n\nWe have data from 180 agricultural fields across a few Nebraska counties. For each field we recorded soil test results (N, P, K, pH, organic matter, clay %, soil moisture), a vegetation index (NDVI) from imagery during the growing season, and the end-of-season yield. We also have field characteristics like crop type, irrigation type, and management (conventional vs cover crop). The goal is to use multivariate methods to summarize soil + vegetation conditions and find field types.\n\n\nWe have data from 180 agricultural fields across a few Nebraska counties.\nFor each field, we recorded soil test results (N, P, K, pH, organic matter, clay %, soil moisture), a vegetation index (NDVI) from imagery during the growing season, and the end-of-season yield. We also have field characteristics like crop type, irrigation type, and management (conventional vs cover crop).\nThe goal is to use multivariate methods to summarize soil + vegetation conditions and find field types."
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#loading-data-in-r",
+    "href": "multivariate_workshop_in_SAS.html#loading-data-in-r",
+    "title": "Multivariate Analysis in SAS",
+    "section": "Loading data in R",
+    "text": "Loading data in R\n\n\nCode\nurl &lt;- \"https://raw.githubusercontent.com/aftabsorwar/STAT-930-workshop/refs/heads/main/multivariate_workshop_dataset.csv\"\ndat &lt;- read.csv(url)\n\n# Save `dat` into your current working directory\nwrite.csv(dat, file = \"multivariate_workshop_dataset.csv\", row.names = FALSE)\n\n# (Optional) check where it was saved\ngetwd()\n\n\n[1] \"D:/Courses_SPRING26/STAT 930/stat 930 workshop/STAT-930-workshop\"\n\n\nCode\n# make group variables factors\ndat$Crop &lt;- factor(dat$Crop)\ndat$Management &lt;- factor(dat$Management)\n\n# Quick look\nstr(dat)\n\n\n'data.frame':   180 obs. of  8 variables:\n $ FieldID   : chr  \"F001\" \"F002\" \"F003\" \"F004\" ...\n $ Crop      : Factor w/ 3 levels \"Corn\",\"Soybean\",..: 1 1 2 1 1 2 2 2 1 1 ...\n $ Management: Factor w/ 2 levels \"Conventional\",..: 2 1 1 1 2 2 1 1 1 2 ...\n $ SoilN     : num  21.5 9.5 8.8 7.7 26.8 22.6 11.8 24.8 15.9 25.1 ...\n $ SoilP     : num  33.2 9.1 12.9 7.1 31 26.6 20.2 21.2 17.7 27.5 ...\n $ OrgMatter : num  3.2 1.41 1.86 2.12 3.24 2.98 2.11 2.46 2 2.65 ...\n $ Moisture  : num  20.5 20.4 17.1 16.5 28 25.4 16.1 21.5 18.4 25 ...\n $ NDVI      : num  0.9 0.872 0.712 0.87 0.9 0.9 0.757 0.651 0.79 0.9 ...\n\n\nCode\nhead(dat)\n\n\n  FieldID    Crop   Management SoilN SoilP OrgMatter Moisture  NDVI\n1    F001    Corn    CoverCrop  21.5  33.2      3.20     20.5 0.900\n2    F002    Corn Conventional   9.5   9.1      1.41     20.4 0.872\n3    F003 Soybean Conventional   8.8  12.9      1.86     17.1 0.712\n4    F004    Corn Conventional   7.7   7.1      2.12     16.5 0.870\n5    F005    Corn    CoverCrop  26.8  31.0      3.24     28.0 0.900\n6    F006 Soybean    CoverCrop  22.6  26.6      2.98     25.4 0.900\n\n\n\nShort description of the variable:\nFieldID: Unique ID for each field.\nCrop: Crop type grown (Corn / Soybean / Wheat).\nManagement: Practice type (Conventional vs CoverCrop).\nSoilN: Soil nitrogen level (mg/kg). Higher often means more available nitrogen for plants.\nSoilP: Soil phosphorus level (ppm). Supports root development and early growth.\nOrgMatter: Organic matter (%). A soil health indicator. Improves fertility and water-holding capacity.\nMoisture: Soil moisture (%). Amount of water in the soil.\nNDVI: A satellite/drone-based vegetation index (0–1) that measures how green the crop is. Larger values generally mean more plant biomass and stronger vegetation cover."
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#pca-in-r",
+    "href": "multivariate_workshop_in_SAS.html#pca-in-r",
+    "title": "Multivariate Analysis in SAS",
+    "section": "PCA in R",
+    "text": "PCA in R\n\n\nCode\n# Create a vector of the numeric column names we want for PCA\nnum_vars &lt;- c(\"SoilN\", \"SoilP\", \"OrgMatter\", \"Moisture\", \"NDVI\")\n\n# Create a numeric-only data frame X containing just those variables\nX &lt;- dat[, num_vars]\n\n# Confirm that X contains only numeric columns\nstr(X)\n\n\n'data.frame':   180 obs. of  5 variables:\n $ SoilN    : num  21.5 9.5 8.8 7.7 26.8 22.6 11.8 24.8 15.9 25.1 ...\n $ SoilP    : num  33.2 9.1 12.9 7.1 31 26.6 20.2 21.2 17.7 27.5 ...\n $ OrgMatter: num  3.2 1.41 1.86 2.12 3.24 2.98 2.11 2.46 2 2.65 ...\n $ Moisture : num  20.5 20.4 17.1 16.5 28 25.4 16.1 21.5 18.4 25 ...\n $ NDVI     : num  0.9 0.872 0.712 0.87 0.9 0.9 0.757 0.651 0.79 0.9 ...\n\n\nCode\n# Count missing values in each column\ncolSums(is.na(X))\n\n\n    SoilN     SoilP OrgMatter  Moisture      NDVI \n        0         0         0         0         0 \n\n\n\n\nCode\n# Calculate correlation matrix\ncor_matrix &lt;- cor(X)\nprint(round(cor_matrix, 2))\n\n\n          SoilN SoilP OrgMatter Moisture NDVI\nSoilN      1.00  0.89      0.81     0.03 0.21\nSoilP      0.89  1.00      0.81    -0.04 0.24\nOrgMatter  0.81  0.81      1.00     0.06 0.19\nMoisture   0.03 -0.04      0.06     1.00 0.17\nNDVI       0.21  0.24      0.19     0.17 1.00\n\n\nCode\n# Visualize correlations\n# install.packages(\"corrplot\")\nlibrary(corrplot)\n\ncorrplot(cor_matrix, \n         method = \"color\", \n         type = \"upper\",\n         addCoef.col = \"black\", \n         number.cex = 0.7,\n         tl.col = \"black\", \n         tl.srt = 45,\n         title = \"Correlation Matrix: Field Variables\",\n         mar = c(0, 0, 2, 0))\n\n\n\n\n\n\n\n\n\n\n\nCode\n# Fit PCA using prcomp:\n# center=TRUE subtracts the mean\n# scale.=TRUE divides by standard deviation (standardizes variables)\npca_fit &lt;- prcomp(X, center = TRUE, scale. = TRUE)\n\n# Print a basic summary of the PCA result\nsummary(pca_fit)\n\n\nImportance of components:\n                         PC1    PC2    PC3     PC4    PC5\nStandard deviation     1.660 1.0596 0.8970 0.46172 0.3233\nProportion of Variance 0.551 0.2245 0.1609 0.04264 0.0209\nCumulative Proportion  0.551 0.7755 0.9365 0.97910 1.0000\n\n\n\nPC1 and PC2 are new summary variables created by PCA.They are made from your original variables, but they are designed to:\nSummarize the data with fewer dimensions\nCapture the biggest patterns in the data\na.PC1 captures the largest overall variation (the main trend).\nb.PC2 captures the second-largest variation, separate from PC1.\nthese 2 are uncorrelated (i.e. PC2 is built so it does not repeat what PC1 already explains.)\n\n\n\n\nCode\n# pca_fit$sdev contains the standard deviations of each principal component\n# Squaring gives variance of each PC\npc_var &lt;- pca_fit$sdev^2\n\n# Convert to percentage of variance explained (PVE)\npve &lt;- pc_var / sum(pc_var)\npve_pct &lt;- pve*100\npve_pct &lt;- round(pve_pct, 3)\npve_pct\n\n\n[1] 55.099 22.454 16.093  4.264  2.090\n\n\nCode\ncumulative_pve_pct &lt;- cumsum(pve_pct)\ncumulative_pve_pct\n\n\n[1]  55.099  77.553  93.646  97.910 100.000\n\n\n\nPC1 explains 55%, PC2 explains 22%. Together about 78% of the variation\n\n\n\nCode\n# Plot proportion variance explained for each PC\nplot(pve, type = \"b\",\n     xlab = \"Principal Component\",\n     ylab = \"Proportion of Variance Explained\")\n\n\n\n\n\n\n\n\n\n\n\nCode\n# Show loadings for the first two PCs\nround(pca_fit$rotation[, 1:2], 3)\n\n\n             PC1    PC2\nSoilN     -0.570 -0.088\nSoilP     -0.571 -0.123\nOrgMatter -0.550 -0.063\nMoisture  -0.039  0.790\nNDVI      -0.211  0.590\n\n\n\nA loading is a correlation-like weight, so its value is between −1 and +1What the size means\nClose to +1 or −1 → strong contribution of that variable to the PC\nClose to 0 → little contribution\nThe sign does not matter, magnitude matters.\n\n\n\nFor our example:\nPC1 mainly represents a “soil fertility / soil health”.\n\nFields differ on PC1 mostly because of SoilN, SoilP, and organic matter.\n\nPC2 mainly represents a “water + crop greenness”.\n\nFields differ on PC2 mostly because of soil moisture and NDVI.\n\n\n\n\n\nCode\nbiplot(pca_fit,\n       cex = 0.6,        # point/label size\n       scale = 0,        # keeps interpretation simple\n       xlabs = rep(\".\", nrow(X)))  # hides observation labels (too crowded)\n\n\n\n\n\n\n\n\n\n\nBlue dots = individual fields (each point is one field)\nRed arrows = your original variables (SoilN, SoilP, OrgMatter, Moisture, NDVI)\nPC1 (x-axis) and PC2 (y-axis) are the two main PCA directions\n\n\nThis biplot shows that PC1 mainly reflects soil fertility (SoilN, SoilP, OrgMatter), while PC2 mainly reflects moisture and crop greenness (Moisture, NDVI). Fields spread along these two gradients.\nA field located toward the left tends to have higher SoilN/SoilP/OrgMatter\nA field located higher up tends to have higher Moisture and NDVI\nFields near the center are closer to average on all variables"
+  },
+  {
+    "objectID": "multivariate_workshop_in_SAS.html#ca-in-r",
+    "href": "multivariate_workshop_in_SAS.html#ca-in-r",
+    "title": "Multivariate Analysis in SAS",
+    "section": "CA in R",
+    "text": "CA in R\n\n\nCode\n# Standardize to mean 0 and sd 1\nX_scaled &lt;- scale(X)\n\n\n# Elbow method: try k from 1 to 8\nset.seed(930)\nwss &lt;- numeric(8)\n\nfor (k in 1:8) {\n  km &lt;- kmeans(X_scaled, centers = k, nstart = 25)\n  wss[k] &lt;- km$tot.withinss\n}\n\n\n\n\nCode\nplot(1:8, wss, type = \"b\",\n     xlab = \"Number of clusters (k)\",\n     ylab = \"Total within-cluster sum of squares\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nset.seed(930)\nkm3 &lt;- kmeans(X_scaled, centers = 3, nstart = 25)\n\n# Add cluster labels to the dataset\ndat$Cluster &lt;- factor(km3$cluster)\n\n# How many fields per cluster?\ntable(dat$Cluster)\n\n\n\n 1  2  3 \n61 86 33 \n\n\n\n\nCode\n# Cluster means (interpretation table)\ncluster_means &lt;- aggregate(X, by = list(Cluster = dat$Cluster), mean)\ncluster_means\n\n\n  Cluster     SoilN    SoilP OrgMatter Moisture      NDVI\n1       1 24.544262 30.99508  3.032131 19.26393 0.8300000\n2       2 17.574419 21.19186  2.376395 19.27558 0.7587674\n3       3  8.336364 10.02121  1.757576 18.26364 0.6998182\n\n\n\n\nCode\n# PCA only for plotting (not required for clustering)\npca &lt;- prcomp(X_scaled, center = FALSE, scale. = FALSE)\nscores &lt;- as.data.frame(pca$x[, 1:2])\n\nplot(scores$PC1, scores$PC2,\n     pch = 19,\n     xlab = \"PC1\", ylab = \"PC2\",\n     main = \"PCA space (without cluster)\")\n\n\n\n\n\n\n\n\n\nCode\nplot(scores$PC1, scores$PC2,\n     col = dat$Cluster, pch = 19,\n     xlab = \"PC1\", ylab = \"PC2\",\n     main = \"Clusters shown in PCA space\")\nlegend(\"topright\", legend = levels(dat$Cluster),\n       col = 1:length(levels(dat$Cluster)), pch = 19)\n\n\n\n\n\n\n\n\n\n\nPoints with the same color are grouped as similar field profiles. Separation means clusters differ.\n\n\nClustering helps us find field types without a response variable. Then we summarize each cluster using the mean soil and NDVI values to create an interpretable story."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Multivariate Analysis in R",
+    "section": "",
+    "text": "Multivariate Analysis in R\n\n\n\nAftab A Sorwar\n\n\n\n\n\n\n\n\n\n\n\nMultivariate Analysis in SAS\n\n\n\nAftab A Sorwar\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "multivariate_workshop_in_R.html#todays-goal",
     "href": "multivariate_workshop_in_R.html#todays-goal",
     "title": "Multivariate Analysis in R",
@@ -82,12 +173,5 @@
     "title": "Multivariate Analysis in R",
     "section": "CA in R",
     "text": "CA in R\n\n\nCode\n# Standardize to mean 0 and sd 1\nX_scaled &lt;- scale(X)\n\n\n# Elbow method: try k from 1 to 8\nset.seed(930)\nwss &lt;- numeric(8)\n\nfor (k in 1:8) {\n  km &lt;- kmeans(X_scaled, centers = k, nstart = 25)\n  wss[k] &lt;- km$tot.withinss\n}\n\n\n\n\nCode\nplot(1:8, wss, type = \"b\",\n     xlab = \"Number of clusters (k)\",\n     ylab = \"Total within-cluster sum of squares\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nset.seed(930)\nkm3 &lt;- kmeans(X_scaled, centers = 3, nstart = 25)\n\n# Add cluster labels to the dataset\ndat$Cluster &lt;- factor(km3$cluster)\n\n# How many fields per cluster?\ntable(dat$Cluster)\n\n\n\n 1  2  3 \n61 86 33 \n\n\n\n\nCode\n# Cluster means (interpretation table)\ncluster_means &lt;- aggregate(X, by = list(Cluster = dat$Cluster), mean)\ncluster_means\n\n\n  Cluster     SoilN    SoilP OrgMatter Moisture      NDVI\n1       1 24.544262 30.99508  3.032131 19.26393 0.8300000\n2       2 17.574419 21.19186  2.376395 19.27558 0.7587674\n3       3  8.336364 10.02121  1.757576 18.26364 0.6998182\n\n\n\n\nCode\n# PCA only for plotting (not required for clustering)\npca &lt;- prcomp(X_scaled, center = FALSE, scale. = FALSE)\nscores &lt;- as.data.frame(pca$x[, 1:2])\n\nplot(scores$PC1, scores$PC2,\n     pch = 19,\n     xlab = \"PC1\", ylab = \"PC2\",\n     main = \"PCA space (without cluster)\")\n\n\n\n\n\n\n\n\n\nCode\nplot(scores$PC1, scores$PC2,\n     col = dat$Cluster, pch = 19,\n     xlab = \"PC1\", ylab = \"PC2\",\n     main = \"Clusters shown in PCA space\")\nlegend(\"topright\", legend = levels(dat$Cluster),\n       col = 1:length(levels(dat$Cluster)), pch = 19)\n\n\n\n\n\n\n\n\n\n\nPoints with the same color are grouped as similar field profiles. Separation means clusters differ.\n\n\nClustering helps us find field types without a response variable. Then we summarize each cluster using the mean soil and NDVI values to create an interpretable story."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Multivariate Analysis in R",
-    "section": "",
-    "text": "Multivariate Analysis in R\n\n\n\nAftab A Sorwar\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]
