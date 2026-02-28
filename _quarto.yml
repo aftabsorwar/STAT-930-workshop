@@ -4,7 +4,7 @@ project:
 
 website:
   search: false
-  title: "Multivariate Analysis in R and SAS"
+  title: "Aftab A Sorwar"
   navbar:
     left:
       - href: index.qmd
