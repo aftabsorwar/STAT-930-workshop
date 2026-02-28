@@ -1,5 +1,5 @@
 ---
-title: "Multivariate Analysis in R"
+title: "Multivariate Analysis in R and SAS"
 author: "Aftab A Sorwar"
 format: 
   revealjs:
@@ -143,102 +143,89 @@ Imagine a pencil • Side view: Long & detailed • End view: Just a circle
 PCA finds the "side view" The angle that shows the most variation and information
 :::
 
-### Why use PCA 
+### Why use PCA
 
-:::: {.columns style="font-size: .8em;"}
-
+::::: {.columns style="font-size: .8em;"}
 ::: {.column width="50%"}
-* Dimensionality Reduction
+-   Dimensionality Reduction
 
-* Remove Redundancy
+-   Remove Redundancy
 
-* Feature Engineering
+-   Feature Engineering
 :::
 
 ::: {.column width="50%"}
-* Data Visualization
+-   Data Visualization
 
-* Noise Reduction
+-   Noise Reduction
 
-* Speed up Analysis
+-   Speed up Analysis
 :::
-
-::::
+:::::
 
 ### When to use PCA
 
-:::: {.columns style="font-size: 0.7em;"}
-
+::::: {.columns style="font-size: 0.7em;"}
 ::: {.column width="50%"}
 [**Good Scenarios:**]{style="color: Green;"}
 
-1. Many correlated variables (r > 0.7)
-2. Need to visualize complex data
-3. All variables are numeric/continuous
-4. Variables measured on similar scales
-5. Exploratory data analysis
-6. Pre-processing for ML models
-
+1.  Many correlated variables (r \> 0.7)
+2.  Need to visualize complex data
+3.  All variables are numeric/continuous
+4.  Variables measured on similar scales
+5.  Exploratory data analysis
+6.  Pre-processing for ML models
 :::
 
 ::: {.column width="50%"}
 [**Not Recommended When:**]{style="color: red;"}
 
-1. Variables are independent (not correlated)
-2. Need to interpret original variables
-3. Categorical/binary variables only
-4. Small sample size (n < 50)
-5. Missing data is widespread
-6. Variables on very different scales (unless standardized)
-
+1.  Variables are independent (not correlated)
+2.  Need to interpret original variables
+3.  Categorical/binary variables only
+4.  Small sample size (n \< 50)
+5.  Missing data is widespread
+6.  Variables on very different scales (unless standardized)
 :::
+:::::
 
-::::
-
-
-:::{aside}
-**Tip:** Check correlation matrix first! If most correlations < 0.3, PCA may not help much.
+::: {aside}
+**Tip:** Check correlation matrix first! If most correlations \< 0.3, PCA may not help much.
 :::
-
 
 ## **CA** {#CA}
 
 **Cluster Analysis is an unsupervised method that groups observations** (fields, farms, samples, people) so that:
 
-:::: {.columns style="font-size: 0.75em;"}
-* items within the same cluster are similar, and
+::: {.columns style="font-size: 0.75em;"}
+-   items within the same cluster are similar, and
 
-* items in different clusters are different
+-   items in different clusters are different
 
 based on the variables chosen (usually numeric variables).
+:::
 
-::::
+### Why use CA
 
-### Why use CA 
+::: {.columns style="font-size: 0.8em;"}
+-   discover types/profiles in your data (e.g. “field types”)
 
-:::: {.columns style="font-size: 0.8em;"}
+-   simplify a complex dataset into a few understandable groups
 
-* discover types/profiles in your data (e.g. “field types”)
+-   support decision-making (e.g., “these fields behave similarly, manage them similarly”)
 
-* simplify a complex dataset into a few understandable groups
-
-* support decision-making (e.g., “these fields behave similarly, manage them similarly”)
-
-* identify unusual observations (outliers often show up as small or isolated clusters)
-
-::::
-
-
+-   identify unusual observations (outliers often show up as small or isolated clusters)
+:::
 
 ### When to use CA
-:::: {.columns style="font-size: 0.7em;"}
-* do not have labeled groups already (no “true classes”)
 
-* have several variables and suspect there are hidden patterns
+::: {.columns style="font-size: 0.7em;"}
+-   do not have labeled groups already (no “true classes”)
 
-* goal is exploration: “What kinds of observations exist here?”
+-   have several variables and suspect there are hidden patterns
 
-::::
+-   goal is exploration: “What kinds of observations exist here?”
+:::
 
 ## **Example**
 
@@ -275,7 +262,7 @@ str(dat)
 head(dat)
 ```
 
-:::: {.columns style="font-size: .8em;"}
+::: {.columns style="font-size: .8em;"}
 Short description of the variable:
 
 -   **FieldID:** Unique ID for each field.
@@ -293,8 +280,7 @@ Short description of the variable:
 -   **Moisture:** Soil moisture (%). *Amount of water in the soil.*
 
 -   **NDVI:** A satellite/drone-based vegetation index (0–1) that measures how green the crop is. *Larger values generally mean more plant biomass and stronger vegetation cover.*
-::::
-
+:::
 
 ## **PCA in R**
 
@@ -303,15 +289,14 @@ Short description of the variable:
 num_vars <- c("SoilN", "SoilP", "OrgMatter", "Moisture", "NDVI")
 
 # Create a numeric-only data frame X containing just those variables
-X <- dat[, num_vars]
-
+X <- dat[,num_vars]
+X
 # Confirm that X contains only numeric columns
 str(X)
 
 # Count missing values in each column
 colSums(is.na(X))
 ```
-
 
 ```{r}
 # Calculate correlation matrix
@@ -343,22 +328,21 @@ pca_fit <- prcomp(X, center = TRUE, scale. = TRUE)
 summary(pca_fit)
 ```
 
-:::: {.columns style="font-size: .7em;"}
-
-PC1 and PC2 are new summary variables created by PCA. 
+::: {.columns style="font-size: .7em;"}
+PC1 and PC2 are new summary variables created by PCA.
 
 They are made from your original variables, but they are designed to:
 
-1. Summarize the data with fewer dimensions
+1.  Summarize the data with fewer dimensions
 
-2. Capture the biggest patterns in the data
+2.  Capture the biggest patterns in the data
 
     a.PC1 captures the largest overall variation (the main trend).
 
     b.PC2 captures the second-largest variation, separate from PC1.
 
-3. these 2 are uncorrelated (i.e. PC2 is built so it does not repeat what PC1 already explains.)
-::::
+3.  these 2 are uncorrelated (i.e. PC2 is built so it does not repeat what PC1 already explains.)
+:::
 
 ```{r}
 # pca_fit$sdev contains the standard deviations of each principal component
@@ -374,11 +358,9 @@ cumulative_pve_pct <- cumsum(pve_pct)
 cumulative_pve_pct
 ```
 
-:::: {.columns style="font-size: .8em;"}
+::: {.columns style="font-size: .8em;"}
 PC1 explains 55%, PC2 explains 22%. Together about 78% of the variation
-
-::::
-
+:::
 
 ```{r}
 # Plot proportion variance explained for each PC
@@ -392,32 +374,43 @@ plot(pve, type = "b",
 round(pca_fit$rotation[, 1:2], 3)
 ```
 
-
-:::: {.columns style="font-size: .7em;"}
+::: {.columns style="font-size: .7em;"}
 A loading is a correlation-like weight, so its value is between −1 and +1
 
 What the size means
 
-* Close to +1 or −1 → strong contribution of that variable to the PC
+-   Close to +1 or −1 → strong contribution of that variable to the PC
 
-* Close to 0 → little contribution
+-   Close to 0 → little contribution
 
-* The sign does not matter, magnitude matters.
+-   The sign does not matter, magnitude matters.
+:::
 
-::::
-
-:::: {.columns style="font-size: .7em;"}
+::: {.columns style="font-size: .7em;"}
 For our example:
 
-* PC1 mainly represents a “soil fertility / soil health”.
-    - Fields differ on PC1 mostly because of SoilN, SoilP, and organic matter.
-
-* PC2 mainly represents a “water + crop greenness”.
-    - Fields differ on PC2 mostly because of soil moisture and NDVI.
-::::
+-   PC1 mainly represents a “soil fertility / soil health”.
+    -   Fields differ on PC1 mostly because of SoilN, SoilP, and organic matter.
+-   PC2 mainly represents a “water + crop greenness”.
+    -   Fields differ on PC2 mostly because of soil moisture and NDVI.
+:::
 
 ```{r}
 biplot(pca_fit,
+       cex = 0.6,        # point/label size
+       scale = 0,        # keeps interpretation simple
+       xlabs = rep(".", nrow(X)))  # hides observation labels (too crowded)
+
+```
+
+##### check pc2 & pc3
+
+```{r}
+# Show loadings for the first 3 PC's
+round(pca_fit$rotation[, 1:2], 3)
+
+biplot(pca_fit,
+       choices = c(2,3),
        cex = 0.6,        # point/label size
        scale = 0,        # keeps interpretation simple
        xlabs = rep(".", nrow(X)))  # hides observation labels (too crowded)
@@ -430,20 +423,17 @@ Blue dots = individual fields (each point is one field)
 Red arrows = your original variables (SoilN, SoilP, OrgMatter, Moisture, NDVI)
 
 PC1 (x-axis) and PC2 (y-axis) are the two main PCA directions
-
 :::
 
-:::: {.columns style="font-size: .7em;"}
-
+::: {.columns style="font-size: .7em;"}
 This biplot shows that PC1 mainly reflects soil fertility (SoilN, SoilP, OrgMatter), while PC2 mainly reflects moisture and crop greenness (Moisture, NDVI). Fields spread along these two gradients.
 
+-   A field located toward the left tends to have higher SoilN/SoilP/OrgMatter
 
-* A field located toward the left tends to have higher SoilN/SoilP/OrgMatter
+-   A field located higher up tends to have higher Moisture and NDVI
 
-* A field located higher up tends to have higher Moisture and NDVI
-
-* Fields near the center are closer to average on all variables
-::::
+-   Fields near the center are closer to average on all variables
+:::
 
 ## **CA in R**
 
@@ -511,8 +501,274 @@ legend("topright", legend = levels(dat$Cluster),
 Points with the same color are grouped as similar field profiles. Separation means clusters differ.
 :::
 
-
-:::: {.columns style="font-size: .7em;"}
+::: {.columns style="font-size: .7em;"}
 Clustering helps us find field types without a response variable. Then we summarize each cluster using the mean soil and NDVI values to create an interpretable story.
-::::
+:::
 
+## **Loading data in SAS**
+
+``` sas
+/* Read the CSV directly from GitHub */
+filename myurl url "https://raw.githubusercontent.com/aftabsorwar/STAT-930-workshop/refs/heads/main/iris.csv";
+
+proc import datafile=myurl
+    out=iris
+    dbms=csv
+    replace;
+    guessingrows=max;
+run;
+
+/* Quick look */
+proc contents data=iris;
+run;
+
+proc print data=iris(obs=5);
+run;
+```
+
+![](images/clipboard-232216850.png){width="600"}
+
+![](images/clipboard-1171872230.png)
+
+![](images/clipboard-3058887160.png)
+
+::: {.columns style="font-size: .5em;"}
+This flower figures were uploaded by [Gayan_De_Silva](https://www.researchgate.net/profile/Gayan_De_Silva2)
+:::
+
+## **PCA in SAS**
+
+#### Correlation Matrix
+
+``` sas
+/* Correlation Heatmap */
+ods graphics on;
+
+proc corr data=iris nosimple noprob plots=matrix(histogram);
+   var "Sepal.Length"n 
+       "Sepal.Width"n 
+       "Petal.Length"n 
+       "Petal.Width"n;
+run;
+
+ods graphics off;
+```
+
+![](images/clipboard-2109047777.png)
+
+![](images/clipboard-506961605.png){width="800"}
+
+::: {.columns style="font-size: .7em;"}
+-   **Petal.Length & Petal.Width = 0.9629** → extremely strong positive correlation
+
+-   **Sepal.Length strongly correlated with petal variables** (≈ 0.82–0.87)
+
+-   **Sepal.Width negatively correlated** with the others
+:::
+
+#### PCA {#pca}
+
+``` sas
+/* PCA */
+ods graphics on;
+
+proc princomp data=iris
+              out=iris_pca_scores
+              outstat=iris_pca_stat
+              std
+              plots=scree;
+   var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;
+run;
+
+ods graphics off;
+```
+
+![](images/clipboard-911120988.png){width="600"}
+
+![](images/clipboard-1799299280.png){width="800"}
+
+::: {.columns style="font-size: .7em;"}
+-   PC1 explains \~73% of total variation → very dominant.
+
+-   PC1 + PC2 explain \~96% → two components are enough.
+
+-   PC3 and PC4 contribute almost nothing.
+
+So dimension can be reduced from 4 variables → 2 components safely.
+:::
+
+![](images/clipboard-1963586739.png){width="600"}
+
+::: {.columns style="font-size: .7em;"}
+For PC1:
+
+-   Strong positive loadings for **petal variables**
+
+-   Moderate positive loading for Sepal.Length
+
+-   Negative for Sepal.Width
+
+PC1 represents **overall flower size (especially petal size)**.
+:::
+
+::: {.columns style="font-size: .7em;"}
+For PC2:
+
+-   Dominated by **Sepal.Width**
+
+-   Almost no contribution from petal variables
+
+PC2 represents **sepal width variation independent of petal size**.
+:::
+
+#### Bi-plot
+
+``` sas
+ods graphics on;
+proc princomp data=iris plots=(patternplot score(ncomp=2));
+    var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;
+    title "PCA – Biplot (Pattern + Score Plot)";
+run;
+ods graphics off;
+```
+
+![](images/clipboard-182386297.png){width="600"}
+
+![](images/clipboard-160036622.png){width="800"}
+
+``` sas
+proc sgplot data=iris_pca_scores;
+   scatter x=prin1 y=prin2 / group=Species;
+   xaxis label="PC1";
+   yaxis label="PC2";
+   title "PCA of Iris Data";
+run;
+```
+
+![](images/clipboard-1641203757.png){width="799"}
+
+## **CA in SAS**
+
+``` sas
+/* Standardize the numeric variables */
+proc standard data=iris mean=0 std=1 out=iris_z;
+   var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;
+run;
+
+/* To see first 5 observation */
+proc print data=iris_z(obs=5);
+run;
+```
+
+![](images/clipboard-2680185136.png){width="600"}
+
+::: {.columns style="font-size: .7em;"}
+We need to find optimum number of cluster to be considered for this analysis.
+:::
+
+``` sas
+/* Elbow method (within-cluster variation) */
+%macro elbow(maxk=6);
+
+data elbow_results;
+  length k 8 wcss 8;
+  stop;
+run;
+
+%do k=1 %to &maxk;
+
+   /* Run k-means and save per-observation distance to its cluster center */
+   proc fastclus data=iris_z maxclusters=&k maxiter=100 out=clusout noprint;
+      var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;
+   run;
+
+   /* Compute WCSS = sum(distance^2) */
+   data clusout2;
+      set clusout;
+
+      /* FASTCLUS usually creates DISTANCE. Some versions use _DIST_. */
+      dist = coalesce(DISTANCE, _DIST_);
+      dist2 = dist*dist;
+   run;
+
+   proc sql noprint;
+      select sum(dist2) into :wcss from clusout2;
+   quit;
+
+   data temp;
+      k = &k;
+      wcss = &wcss;
+   run;
+
+   proc append base=elbow_results data=temp force;
+   run;
+
+%end;
+
+%mend;
+
+%elbow(maxk=6);
+
+
+/* To see first 5 observation */
+proc print data=clusout(obs=5);
+run;
+```
+
+![](images/clipboard-1690822838.png)
+
+![](images/clipboard-3162895829.png){width="600"}
+
+``` sas
+/* Elbow plot */
+proc sgplot data=elbow_results;
+   series x=k y=wcss / markers;
+   xaxis label="Number of clusters (K)" integer;
+   yaxis label="WCSS (sum of squared within-cluster distances)";
+   title "Elbow Plot (Iris)";
+run;
+```
+
+![](images/clipboard-1874552263.png){width="800"}
+
+::: {.columns style="font-size: .7em;"}
+Proceed with the optimum cluster
+:::
+
+``` sas
+/* Run K-means (K=3) */
+proc fastclus data=iris_z maxclusters=3 maxiter=100 out=iris_k3;
+   var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;
+run;
+```
+
+![](images/clipboard-2526489861.png){width="800"}
+
+``` sas
+/* plotting the clusters */
+proc princomp data=iris_z out=iris_pca std;
+   var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;
+run;
+
+/* Combine cluster labels with PCA scores */
+data iris_pca_cluster;
+   merge iris_pca iris_k3(keep=cluster);
+run;
+
+/* To see first 5 observation */
+proc print data=iris_pca_cluster(obs=5);
+run;
+```
+
+![](images/clipboard-290851980.png){width="800"}
+
+``` sas
+proc sgplot data=iris_pca_cluster;
+   scatter x=prin1 y=prin2 / group=cluster;
+   xaxis label="PC1";
+   yaxis label="PC2";
+   title "K-means Clusters on PCA Space";
+run;
+```
+
+![](images/clipboard-109630825.png){width="800"}

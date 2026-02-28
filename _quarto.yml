@@ -4,7 +4,7 @@ project:
 
 website:
   search: false
-  title: "Multivariate Analysis in R"
+  title: "Multivariate Analysis in R and SAS"
   navbar:
     left:
       - href: index.qmd
@@ -12,4 +12,4 @@ website:
 
 format:
   html:
-    theme: pulse
+    theme: flatly

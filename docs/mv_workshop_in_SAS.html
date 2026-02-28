@@ -11,7 +11,7 @@
   <meta name="generator" content="quarto-1.5.56">
 
   <meta name="author" content="Aftab A Sorwar">
-  <title>Multivariate Analysis in R and SAS</title>
+  <title>Multivariate Analysis in R and SAS – Multivariate Analysis in SAS</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -395,7 +395,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Multivariate Analysis in R and SAS</h1>
+  <h1 class="title">Multivariate Analysis in SAS</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -418,12 +418,12 @@ Aftab A Sorwar
 <li><a href="#/PCA" id="/toc-PCA"><strong>PCA</strong></a></li>
 <li><a href="#/CA" id="/toc-CA"><strong>CA</strong></a></li>
 <li><a href="#/example" id="/toc-example"><strong>Example</strong></a></li>
-<li><a href="#/loading-data-in-r" id="/toc-loading-data-in-r"><strong>Loading data in R</strong></a></li>
-<li><a href="#/pca-in-r" id="/toc-pca-in-r"><strong>PCA in R</strong></a></li>
-<li><a href="#/ca-in-r" id="/toc-ca-in-r"><strong>CA in R</strong></a></li>
 <li><a href="#/loading-data-in-sas" id="/toc-loading-data-in-sas"><strong>Loading data in SAS</strong></a></li>
 <li><a href="#/pca-in-sas" id="/toc-pca-in-sas"><strong>PCA in SAS</strong></a></li>
+<li><a href="#/check-pc2-pc3" id="/toc-check-pc2-pc3">check pc2 &amp; pc3</a>
+<ul>
 <li><a href="#/ca-in-sas" id="/toc-ca-in-sas"><strong>CA in SAS</strong></a></li>
+</ul></li>
 </ul>
 </nav>
 </section>
@@ -433,7 +433,7 @@ Aftab A Sorwar
 <ul>
 <li>Explain what <strong>multivariate data</strong> is!</li>
 <li>Choose a method based on the Objective.</li>
-<li>Run each method in <strong>R</strong> and interpret results</li>
+<li>Run each method in <strong>SAS</strong> and interpret results</li>
 </ul>
 </section>
 <section id="what-is-multivariate-data" class="slide level2">
@@ -656,57 +656,38 @@ Aftab A Sorwar
 <li><p>The goal is to use multivariate methods to summarize soil + vegetation conditions and find field types.</p></li>
 </ul>
 </section>
-<section id="loading-data-in-r" class="slide level2">
-<h2><strong>Loading data in R</strong></h2>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/aftabsorwar/STAT-930-workshop/refs/heads/main/multivariate_workshop_dataset.csv"</span></span>
-<span id="cb1-2"><a></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url)</span>
+<section id="loading-data-in-sas" class="slide level2">
+<h2><strong>Loading data in SAS</strong></h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a></a>/* Import data directly from URL using PROC HTTP */</span>
+<span id="cb1-2"><a></a>filename rawdata temp;</span>
 <span id="cb1-3"><a></a></span>
-<span id="cb1-4"><a></a><span class="co"># Save `dat` into your current working directory</span></span>
-<span id="cb1-5"><a></a><span class="fu">write.csv</span>(dat, <span class="at">file =</span> <span class="st">"multivariate_workshop_dataset.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-6"><a></a></span>
-<span id="cb1-7"><a></a><span class="co"># (Optional) check where it was saved</span></span>
-<span id="cb1-8"><a></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "D:/Courses_SPRING26/STAT 930/stat 930 workshop/STAT-930-workshop"</code></pre>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># make group variables factors</span></span>
-<span id="cb3-2"><a></a>dat<span class="sc">$</span>Crop <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>Crop)</span>
-<span id="cb3-3"><a></a>dat<span class="sc">$</span>Management <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>Management)</span>
-<span id="cb3-4"><a></a></span>
-<span id="cb3-5"><a></a><span class="co"># Quick look</span></span>
-<span id="cb3-6"><a></a><span class="fu">str</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   180 obs. of  8 variables:
- $ FieldID   : chr  "F001" "F002" "F003" "F004" ...
- $ Crop      : Factor w/ 3 levels "Corn","Soybean",..: 1 1 2 1 1 2 2 2 1 1 ...
- $ Management: Factor w/ 2 levels "Conventional",..: 2 1 1 1 2 2 1 1 1 2 ...
- $ SoilN     : num  21.5 9.5 8.8 7.7 26.8 22.6 11.8 24.8 15.9 25.1 ...
- $ SoilP     : num  33.2 9.1 12.9 7.1 31 26.6 20.2 21.2 17.7 27.5 ...
- $ OrgMatter : num  3.2 1.41 1.86 2.12 3.24 2.98 2.11 2.46 2 2.65 ...
- $ Moisture  : num  20.5 20.4 17.1 16.5 28 25.4 16.1 21.5 18.4 25 ...
- $ NDVI      : num  0.9 0.872 0.712 0.87 0.9 0.9 0.757 0.651 0.79 0.9 ...</code></pre>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">head</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>  FieldID    Crop   Management SoilN SoilP OrgMatter Moisture  NDVI
-1    F001    Corn    CoverCrop  21.5  33.2      3.20     20.5 0.900
-2    F002    Corn Conventional   9.5   9.1      1.41     20.4 0.872
-3    F003 Soybean Conventional   8.8  12.9      1.86     17.1 0.712
-4    F004    Corn Conventional   7.7   7.1      2.12     16.5 0.870
-5    F005    Corn    CoverCrop  26.8  31.0      3.24     28.0 0.900
-6    F006 Soybean    CoverCrop  22.6  26.6      2.98     25.4 0.900</code></pre>
-</div>
-</div>
+<span id="cb1-4"><a></a>proc http</span>
+<span id="cb1-5"><a></a>  url="https://raw.githubusercontent.com/aftabsorwar/STAT-930-workshop/refs/heads/main/multivariate_workshop_dataset.csv"</span>
+<span id="cb1-6"><a></a>  method="GET"</span>
+<span id="cb1-7"><a></a>  out=rawdata;</span>
+<span id="cb1-8"><a></a>run;</span>
+<span id="cb1-9"><a></a></span>
+<span id="cb1-10"><a></a>/* Read CSV into a SAS dataset */</span>
+<span id="cb1-11"><a></a>proc import datafile=rawdata</span>
+<span id="cb1-12"><a></a>  out=dat</span>
+<span id="cb1-13"><a></a>  dbms=csv</span>
+<span id="cb1-14"><a></a>  replace;</span>
+<span id="cb1-15"><a></a>  getnames=yes;</span>
+<span id="cb1-16"><a></a>run;</span>
+<span id="cb1-17"><a></a></span>
+<span id="cb1-18"><a></a>/* Save a local copy as CSV */</span>
+<span id="cb1-19"><a></a>proc export data=dat</span>
+<span id="cb1-20"><a></a>  outfile="multivariate_workshop_dataset.csv"</span>
+<span id="cb1-21"><a></a>  dbms=csv</span>
+<span id="cb1-22"><a></a>  replace;</span>
+<span id="cb1-23"><a></a>run;</span>
+<span id="cb1-24"><a></a></span>
+<span id="cb1-25"><a></a>/* Quick look at structure */</span>
+<span id="cb1-26"><a></a>proc contents data=dat;</span>
+<span id="cb1-27"><a></a>run;</span>
+<span id="cb1-28"><a></a></span>
+<span id="cb1-29"><a></a>proc print data=dat(obs=6);</span>
+<span id="cb1-30"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="columns" style="font-size: .8em;">
 <p>Short description of the variable:</p><ul>
 <li><p><strong>FieldID:</strong> Unique ID for each field.</p></li>
@@ -720,282 +701,30 @@ Aftab A Sorwar
 </ul>
 </div>
 </section>
-<section id="pca-in-r" class="slide level2 scrollable">
-<h2><strong>PCA in R</strong></h2>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="co"># Create a vector of the numeric column names we want for PCA</span></span>
-<span id="cb7-2"><a></a>num_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"SoilN"</span>, <span class="st">"SoilP"</span>, <span class="st">"OrgMatter"</span>, <span class="st">"Moisture"</span>, <span class="st">"NDVI"</span>)</span>
-<span id="cb7-3"><a></a></span>
-<span id="cb7-4"><a></a><span class="co"># Create a numeric-only data frame X containing just those variables</span></span>
-<span id="cb7-5"><a></a>X <span class="ot">&lt;-</span> dat[,num_vars]</span>
-<span id="cb7-6"><a></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>    SoilN SoilP OrgMatter Moisture  NDVI
-1    21.5  33.2      3.20     20.5 0.900
-2     9.5   9.1      1.41     20.4 0.872
-3     8.8  12.9      1.86     17.1 0.712
-4     7.7   7.1      2.12     16.5 0.870
-5    26.8  31.0      3.24     28.0 0.900
-6    22.6  26.6      2.98     25.4 0.900
-7    11.8  20.2      2.11     16.1 0.757
-8    24.8  21.2      2.46     21.5 0.651
-9    15.9  17.7      2.00     18.4 0.790
-10   25.1  27.5      2.65     25.0 0.900
-11   20.0  24.4      2.90     14.9 0.850
-12    7.5  11.7      1.57     12.9 0.696
-13   23.6  30.4      2.15     22.8 0.713
-14   18.4  20.9      2.18     25.8 0.900
-15   23.7  28.7      3.03     19.2 0.863
-16   23.2  23.4      2.37     23.0 0.540
-17   29.4  36.3      3.90     19.7 0.900
-18   22.1  29.7      2.88     23.2 0.900
-19   19.0  25.1      2.94     25.5 0.900
-20   23.4  37.8      2.61     16.0 0.900
-21   14.5  16.1      2.14     29.3 0.772
-22   22.7  33.1      2.91     16.5 0.900
-23   11.1  15.8      2.00     28.5 0.900
-24   13.6  14.5      2.31     21.2 0.900
-25   11.5  22.5      2.88     23.9 0.816
-26   13.0  19.1      2.59     17.7 0.588
-27   22.6  38.0      3.13     13.4 0.572
-28   18.3  22.0      2.71     12.7 0.759
-29   10.3  11.1      2.66     20.8 0.484
-30   10.0  10.8      1.71     20.8 0.597
-31   15.1  20.7      2.24     14.6 0.764
-32   24.5  24.3      2.99     18.4 0.877
-33   15.7  15.4      2.72     26.9 0.849
-34   24.8  34.2      2.74     17.3 0.817
-35   27.3  30.5      2.94     21.3 0.576
-36   26.5  33.7      3.02     18.5 0.835
-37   20.2  28.9      2.80     19.4 0.881
-38   12.7  16.1      2.24     20.2 0.868
-39   25.5  29.3      3.06     23.4 0.806
-40   17.8  19.5      2.55     16.4 0.856
-41   20.9  27.5      2.47     21.0 0.900
-42   20.2  23.4      2.34     19.2 0.548
-43   20.9  26.9      3.01     17.7 0.900
-44   25.0  26.5      2.64     11.2 0.841
-45   19.3  28.6      2.76     19.7 0.794
-46   20.5  21.7      2.42     21.9 0.863
-47   11.5  17.4      2.36     18.0 0.900
-48    3.5   0.2      1.29     17.0 0.742
-49   14.4  15.8      2.49     17.3 0.731
-50   24.0  25.3      2.53     12.4 0.765
-51   23.3  29.1      3.02     19.1 0.810
-52   10.0   8.9      1.68     14.3 0.784
-53   26.7  31.7      3.06     18.9 0.765
-54   12.2  11.4      2.07     20.1 0.664
-55   20.6  25.8      2.21     15.8 0.863
-56   -1.1  -1.2      1.05     24.4 0.711
-57   26.8  37.3      3.40      8.4 0.893
-58   20.8  27.3      2.14     16.9 0.900
-59   23.9  25.0      2.70     23.0 0.580
-60   20.4  28.1      3.13     20.0 0.703
-61   20.2  18.9      2.67     28.5 0.900
-62   11.1  12.8      2.09     19.6 0.711
-63   30.6  37.7      3.12     22.2 0.900
-64    3.1   8.7      1.23     22.2 0.900
-65   25.5  28.9      3.05     11.1 0.635
-66   13.3  18.1      2.47     23.4 0.629
-67    8.0  12.3      2.41     18.5 0.729
-68    4.8  13.4      1.84     21.9 0.846
-69   19.7  23.3      2.52     15.7 0.396
-70   18.7  21.5      2.57     16.1 0.606
-71   22.6  26.2      2.80     22.9 0.900
-72   24.0  24.8      2.31     20.1 0.799
-73   15.4  23.6      2.03     18.7 0.900
-74   26.6  30.7      2.30     15.4 0.814
-75   23.3  25.4      3.26     23.9 0.900
-76   22.6  26.5      2.99     15.9 0.786
-77   20.2  26.3      2.96     24.9 0.879
-78   16.3  19.2      2.22     21.5 0.856
-79   23.9  24.9      2.87     20.6 0.899
-80   19.1  30.6      2.73     23.5 0.474
-81   29.9  40.2      3.52     26.0 0.900
-82   10.5   8.6      1.54     22.4 0.868
-83   15.2  17.9      2.46      6.7 0.657
-84   18.5  20.9      2.27     17.7 0.894
-85    5.3  10.4      1.67     15.0 0.836
-86   14.3  20.8      2.77     16.1 0.872
-87   16.6  23.2      2.19     19.0 0.900
-88   14.5  21.8      1.78     19.6 0.684
-89    7.4   9.3      1.90     17.1 0.831
-90   13.6  14.7      2.09     19.4 0.900
-91   15.5  18.6      2.37     12.5 0.810
-92   17.0  14.1      2.23     21.5 0.687
-93   28.0  34.1      3.05     21.7 0.739
-94    1.0  -2.6      0.96      9.3 0.444
-95   16.9  20.4      2.39     16.6 0.793
-96   15.8  16.8      2.43     24.2 0.676
-97   13.8  14.9      2.10     18.9 0.900
-98   12.9  17.1      1.84     22.8 0.673
-99   18.8  25.5      2.58     21.7 0.652
-100  21.3  14.3      2.55     19.9 0.774
-101   6.3   4.4      1.47     12.4 0.592
-102  15.9  18.7      2.23     25.3 0.900
-103  24.2  29.6      2.74     22.4 0.850
-104  10.5  14.1      2.12     16.4 0.449
-105  27.5  27.1      2.80     16.5 0.892
-106  16.1  31.0      2.22     17.0 0.758
-107  41.2  51.9      3.82     17.7 0.885
-108   5.5   9.1      1.76     24.0 0.893
-109  14.1  15.3      2.03     16.3 0.790
-110  17.7  25.9      2.62     20.9 0.548
-111  28.2  34.7      2.87     23.9 0.815
-112  20.6  26.4      3.18     19.3 0.618
-113  17.0  18.9      2.09     26.1 0.900
-114  18.6  27.7      2.40     14.8 0.842
-115  26.1  26.5      3.49     26.4 0.604
-116  25.2  20.6      2.49     20.1 0.890
-117  16.8  22.6      2.19     12.3 0.809
-118  17.7  18.8      2.09     21.4 0.888
-119  13.7  13.1      2.15     13.7 0.522
-120  18.1  23.4      2.11     19.1 0.769
-121  20.4  20.7      2.76     17.7 0.698
-122  22.6  29.7      2.63     18.0 0.539
-123  21.2  25.8      2.11     23.0 0.900
-124  25.6  37.5      3.37     20.6 0.900
-125  22.7  26.6      3.01     15.1 0.900
-126  18.6  22.3      3.22     18.3 0.587
-127  19.5  25.5      2.33     11.5 0.822
-128  18.9  21.1      2.30     17.0 0.490
-129  14.4  12.0      2.00     14.5 0.670
-130  19.0  20.5      2.36     15.1 0.642
-131  16.8  19.2      2.24     19.9 0.836
-132  27.0  32.7      2.94     16.6 0.829
-133  11.4  16.3      2.79     13.7 0.520
-134  19.1  20.2      2.37     26.6 0.589
-135   8.4  15.1      1.59     14.9 0.560
-136  13.9  11.1      1.78     20.0 0.846
-137  12.6  16.7      2.58     22.8 0.888
-138  21.4  22.4      3.28     23.8 0.721
-139  17.4  22.6      1.73     25.5 0.786
-140  16.5  25.4      2.26     14.0 0.890
-141  18.2  26.1      3.25     23.6 0.819
-142   4.8   5.1      1.36     17.1 0.619
-143  11.5  16.3      2.08     15.4 0.471
-144  17.5  19.0      1.73     16.9 0.707
-145  12.1  23.7      2.23     21.4 0.805
-146  21.7  23.5      2.67     23.2 0.892
-147  15.7  22.0      2.37     16.9 0.602
-148   6.7  10.5      1.65     26.3 0.852
-149  28.8  29.0      3.17     16.4 0.853
-150  32.9  39.7      3.54     20.4 0.900
-151  19.6  35.1      2.84     20.4 0.900
-152  17.0  20.9      2.55     10.4 0.745
-153  22.2  32.8      3.25     15.0 0.800
-154  24.0  35.0      2.70     14.9 0.751
-155  16.4  23.2      2.72     27.7 0.900
-156  30.7  39.7      3.10     11.9 0.900
-157  25.2  25.9      2.53     26.9 0.574
-158   9.6  11.6      1.88     15.8 0.391
-159  21.5  25.1      2.81     28.0 0.900
-160  16.2  16.7      2.27     26.4 0.687
-161  15.2  15.1      2.64     25.0 0.886
-162  24.1  34.0      2.92      9.0 0.855
-163   8.3  14.0      1.49     21.3 0.727
-164  21.2  22.0      2.61     17.1 0.749
-165  18.0  24.9      2.50     14.6 0.900
-166  22.3  23.3      2.44     14.7 0.900
-167  28.2  32.9      3.24     18.7 0.792
-168   9.8  12.9      2.09     19.9 0.724
-169  15.5  15.9      2.32     20.4 0.886
-170   9.2   9.4      1.68     17.9 0.808
-171  26.7  28.3      3.25     21.1 0.504
-172  19.7  24.8      3.25     18.3 0.815
-173  24.3  30.6      2.30     14.6 0.438
-174  17.1  25.7      2.86     17.0 0.854
-175  20.0  23.0      2.50     13.2 0.729
-176  17.1  33.7      2.68      9.0 0.900
-177  33.1  46.7      3.46     16.7 0.900
-178  18.8  18.1      2.20     14.4 0.812
-179  18.4  20.4      2.49     17.6 0.900
-180  13.9  22.1      2.39     21.3 0.567</code></pre>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="co"># Confirm that X contains only numeric columns</span></span>
-<span id="cb9-2"><a></a><span class="fu">str</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   180 obs. of  5 variables:
- $ SoilN    : num  21.5 9.5 8.8 7.7 26.8 22.6 11.8 24.8 15.9 25.1 ...
- $ SoilP    : num  33.2 9.1 12.9 7.1 31 26.6 20.2 21.2 17.7 27.5 ...
- $ OrgMatter: num  3.2 1.41 1.86 2.12 3.24 2.98 2.11 2.46 2 2.65 ...
- $ Moisture : num  20.5 20.4 17.1 16.5 28 25.4 16.1 21.5 18.4 25 ...
- $ NDVI     : num  0.9 0.872 0.712 0.87 0.9 0.9 0.757 0.651 0.79 0.9 ...</code></pre>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="co"># Count missing values in each column</span></span>
-<span id="cb11-2"><a></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(X))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>    SoilN     SoilP OrgMatter  Moisture      NDVI 
-        0         0         0         0         0 </code></pre>
-</div>
-</div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># Calculate correlation matrix</span></span>
-<span id="cb13-2"><a></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(X)</span>
-<span id="cb13-3"><a></a><span class="fu">print</span>(<span class="fu">round</span>(cor_matrix, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>          SoilN SoilP OrgMatter Moisture NDVI
-SoilN      1.00  0.89      0.81     0.03 0.21
-SoilP      0.89  1.00      0.81    -0.04 0.24
-OrgMatter  0.81  0.81      1.00     0.06 0.19
-Moisture   0.03 -0.04      0.06     1.00 0.17
-NDVI       0.21  0.24      0.19     0.17 1.00</code></pre>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="co"># Visualize correlations</span></span>
-<span id="cb15-2"><a></a><span class="co"># install.packages("corrplot")</span></span>
-<span id="cb15-3"><a></a><span class="fu">library</span>(corrplot)</span>
-<span id="cb15-4"><a></a></span>
-<span id="cb15-5"><a></a><span class="fu">corrplot</span>(cor_matrix, </span>
-<span id="cb15-6"><a></a>         <span class="at">method =</span> <span class="st">"color"</span>, </span>
-<span id="cb15-7"><a></a>         <span class="at">type =</span> <span class="st">"upper"</span>,</span>
-<span id="cb15-8"><a></a>         <span class="at">addCoef.col =</span> <span class="st">"black"</span>, </span>
-<span id="cb15-9"><a></a>         <span class="at">number.cex =</span> <span class="fl">0.7</span>,</span>
-<span id="cb15-10"><a></a>         <span class="at">tl.col =</span> <span class="st">"black"</span>, </span>
-<span id="cb15-11"><a></a>         <span class="at">tl.srt =</span> <span class="dv">45</span>,</span>
-<span id="cb15-12"><a></a>         <span class="at">title =</span> <span class="st">"Correlation Matrix: Field Variables"</span>,</span>
-<span id="cb15-13"><a></a>         <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="multivariate_workshop_in_R_files/figure-revealjs/unnamed-chunk-3-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="co"># Fit PCA using prcomp:</span></span>
-<span id="cb16-2"><a></a><span class="co"># center=TRUE subtracts the mean</span></span>
-<span id="cb16-3"><a></a><span class="co"># scale.=TRUE divides by standard deviation (standardizes variables)</span></span>
-<span id="cb16-4"><a></a>pca_fit <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(X, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb16-5"><a></a></span>
-<span id="cb16-6"><a></a><span class="co"># Print a basic summary of the PCA result</span></span>
-<span id="cb16-7"><a></a><span class="fu">summary</span>(pca_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Importance of components:
-                         PC1    PC2    PC3     PC4    PC5
-Standard deviation     1.660 1.0596 0.8970 0.46172 0.3233
-Proportion of Variance 0.551 0.2245 0.1609 0.04264 0.0209
-Cumulative Proportion  0.551 0.7755 0.9365 0.97910 1.0000</code></pre>
-</div>
-</div>
+<section id="pca-in-sas" class="slide level2 scrollable">
+<h2><strong>PCA in SAS</strong></h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a></a>/* Select only the numeric variables for PCA */</span>
+<span id="cb2-2"><a></a>data X;</span>
+<span id="cb2-3"><a></a>  set dat;</span>
+<span id="cb2-4"><a></a>  keep SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb2-5"><a></a>run;</span>
+<span id="cb2-6"><a></a></span>
+<span id="cb2-7"><a></a>/* Check for missing values */</span>
+<span id="cb2-8"><a></a>proc means data=X nmiss;</span>
+<span id="cb2-9"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb2-10"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb3-1"><a></a>/* Calculate and print the correlation matrix */</span>
+<span id="cb3-2"><a></a>proc corr data=X;</span>
+<span id="cb3-3"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb3-4"><a></a>  title "Correlation Matrix: Field Variables";</span>
+<span id="cb3-5"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb4-1"><a></a>/* Fit PCA using PROC PRINCOMP</span>
+<span id="cb4-2"><a></a>   STD option standardizes variables (mean=0, sd=1)</span>
+<span id="cb4-3"><a></a>   OUT= saves principal component scores */</span>
+<span id="cb4-4"><a></a>proc princomp data=X std out=pca_scores;</span>
+<span id="cb4-5"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb4-6"><a></a>  title "PCA of Field Variables";</span>
+<span id="cb4-7"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="columns" style="font-size: .7em;">
 <p>PC1 and PC2 are new summary variables created by PCA.</p><p>They are made from your original variables, but they are designed to:</p><ol type="1">
 <li><p>Summarize the data with fewer dimensions</p></li>
@@ -1005,65 +734,30 @@ Cumulative Proportion  0.551 0.7755 0.9365 0.97910 1.0000</code></pre>
 <li><p>these 2 are uncorrelated (i.e.&nbsp;PC2 is built so it does not repeat what PC1 already explains.)</p></li>
 </ol>
 </div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="co"># pca_fit$sdev contains the standard deviations of each principal component</span></span>
-<span id="cb18-2"><a></a><span class="co"># Squaring gives variance of each PC</span></span>
-<span id="cb18-3"><a></a>pc_var <span class="ot">&lt;-</span> pca_fit<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb18-4"><a></a></span>
-<span id="cb18-5"><a></a><span class="co"># Convert to percentage of variance explained (PVE)</span></span>
-<span id="cb18-6"><a></a>pve <span class="ot">&lt;-</span> pc_var <span class="sc">/</span> <span class="fu">sum</span>(pc_var)</span>
-<span id="cb18-7"><a></a>pve_pct <span class="ot">&lt;-</span> pve<span class="sc">*</span><span class="dv">100</span></span>
-<span id="cb18-8"><a></a>pve_pct <span class="ot">&lt;-</span> <span class="fu">round</span>(pve_pct, <span class="dv">3</span>)</span>
-<span id="cb18-9"><a></a>pve_pct</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 55.099 22.454 16.093  4.264  2.090</code></pre>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>cumulative_pve_pct <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(pve_pct)</span>
-<span id="cb20-2"><a></a>cumulative_pve_pct</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1]  55.099  77.553  93.646  97.910 100.000</code></pre>
-</div>
-</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb5-1"><a></a>/* Compute variance explained (eigenvalues) manually from PROC PRINCOMP output</span>
+<span id="cb5-2"><a></a>   PROC PRINCOMP prints eigenvalues automatically.</span>
+<span id="cb5-3"><a></a>   To get cumulative % explicitly, use PROC FACTOR with METHOD=PRIN */</span>
+<span id="cb5-4"><a></a>proc factor data=X method=prin scree nfactors=5;</span>
+<span id="cb5-5"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb5-6"><a></a>  title "Variance Explained by Each Principal Component";</span>
+<span id="cb5-7"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="columns" style="font-size: .8em;">
 <p>PC1 explains 55%, PC2 explains 22%. Together about 78% of the variation</p>
 </div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># Plot proportion variance explained for each PC</span></span>
-<span id="cb22-2"><a></a><span class="fu">plot</span>(pve, <span class="at">type =</span> <span class="st">"b"</span>,</span>
-<span id="cb22-3"><a></a>     <span class="at">xlab =</span> <span class="st">"Principal Component"</span>,</span>
-<span id="cb22-4"><a></a>     <span class="at">ylab =</span> <span class="st">"Proportion of Variance Explained"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="multivariate_workshop_in_R_files/figure-revealjs/unnamed-chunk-6-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="co"># Show loadings for the first two PCs</span></span>
-<span id="cb23-2"><a></a><span class="fu">round</span>(pca_fit<span class="sc">$</span>rotation[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>             PC1    PC2
-SoilN     -0.570 -0.088
-SoilP     -0.571 -0.123
-OrgMatter -0.550 -0.063
-Moisture  -0.039  0.790
-NDVI      -0.211  0.590</code></pre>
-</div>
-</div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb6-1"><a></a>/* Scree plot: variance explained per PC</span>
+<span id="cb6-2"><a></a>   Use ODS Graphics with PROC PRINCOMP */</span>
+<span id="cb6-3"><a></a>ods graphics on;</span>
+<span id="cb6-4"><a></a>proc princomp data=X std plots=scree;</span>
+<span id="cb6-5"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb6-6"><a></a>  title "Scree Plot of Principal Components";</span>
+<span id="cb6-7"><a></a>run;</span>
+<span id="cb6-8"><a></a>ods graphics off;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb7-1"><a></a>/* Show loadings (eigenvectors) for the first two PCs</span>
+<span id="cb7-2"><a></a>   PROC PRINCOMP prints eigenvectors (loadings) by default */</span>
+<span id="cb7-3"><a></a>proc princomp data=X std ncomp=2;</span>
+<span id="cb7-4"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb7-5"><a></a>  title "Loadings for PC1 and PC2";</span>
+<span id="cb7-6"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="columns" style="font-size: .7em;">
 <p>A loading is a correlation-like weight, so its value is between −1 and +1</p><p>What the size means</p><ul>
 <li><p>Close to +1 or −1 → strong contribution of that variable to the PC</p></li>
@@ -1083,53 +777,30 @@ NDVI      -0.211  0.590</code></pre>
 </ul></li>
 </ul>
 </div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">biplot</span>(pca_fit,</span>
-<span id="cb25-2"><a></a>       <span class="at">cex =</span> <span class="fl">0.6</span>,        <span class="co"># point/label size</span></span>
-<span id="cb25-3"><a></a>       <span class="at">scale =</span> <span class="dv">0</span>,        <span class="co"># keeps interpretation simple</span></span>
-<span id="cb25-4"><a></a>       <span class="at">xlabs =</span> <span class="fu">rep</span>(<span class="st">"."</span>, <span class="fu">nrow</span>(X)))  <span class="co"># hides observation labels (too crowded)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="multivariate_workshop_in_R_files/figure-revealjs/unnamed-chunk-8-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<h5 id="check-pc2-pc3">check pc2 &amp; pc3</h5>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="co"># Show loadings for the first 3 PC's</span></span>
-<span id="cb26-2"><a></a><span class="fu">round</span>(pca_fit<span class="sc">$</span>rotation[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>             PC1    PC2
-SoilN     -0.570 -0.088
-SoilP     -0.571 -0.123
-OrgMatter -0.550 -0.063
-Moisture  -0.039  0.790
-NDVI      -0.211  0.590</code></pre>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">biplot</span>(pca_fit,</span>
-<span id="cb28-2"><a></a>       <span class="at">choices =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>),</span>
-<span id="cb28-3"><a></a>       <span class="at">cex =</span> <span class="fl">0.6</span>,        <span class="co"># point/label size</span></span>
-<span id="cb28-4"><a></a>       <span class="at">scale =</span> <span class="dv">0</span>,        <span class="co"># keeps interpretation simple</span></span>
-<span id="cb28-5"><a></a>       <span class="at">xlabs =</span> <span class="fu">rep</span>(<span class="st">"."</span>, <span class="fu">nrow</span>(X)))  <span class="co"># hides observation labels (too crowded)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="multivariate_workshop_in_R_files/figure-revealjs/unnamed-chunk-9-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb8-1"><a></a>/* Biplot: plot PC1 vs PC2 scores with variable vectors */</span>
+<span id="cb8-2"><a></a>ods graphics on;</span>
+<span id="cb8-3"><a></a>proc princomp data=X std ncomp=2 plots=pattern(vector ncomp=2);</span>
+<span id="cb8-4"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb8-5"><a></a>  title "Biplot: PC1 vs PC2";</span>
+<span id="cb8-6"><a></a>run;</span>
+<span id="cb8-7"><a></a>ods graphics off;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section>
+<section id="check-pc2-pc3" class="title-slide slide level1 center">
+<h1>check pc2 &amp; pc3</h1>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb9-1"><a></a>/* Show loadings for first 3 PCs */</span>
+<span id="cb9-2"><a></a>proc princomp data=X std ncomp=3;</span>
+<span id="cb9-3"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb9-4"><a></a>  title "Loadings for PC1, PC2, and PC3";</span>
+<span id="cb9-5"><a></a>run;</span>
+<span id="cb9-6"><a></a></span>
+<span id="cb9-7"><a></a>/* Biplot for PC2 vs PC3 */</span>
+<span id="cb9-8"><a></a>ods graphics on;</span>
+<span id="cb9-9"><a></a>proc princomp data=X std ncomp=3 plots=pattern(vector ncomp=2 ncomp2=3);</span>
+<span id="cb9-10"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb9-11"><a></a>  title "Biplot: PC2 vs PC3";</span>
+<span id="cb9-12"><a></a>run;</span>
+<span id="cb9-13"><a></a>ods graphics off;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>Blue dots = individual fields (each point is one field)</p>
 <p>Red arrows = your original variables (SoilN, SoilP, OrgMatter, Moisture, NDVI)</p>
@@ -1153,108 +824,95 @@ NDVI      -0.211  0.590</code></pre>
 </ul>
 </div>
 </section>
-<section id="ca-in-r" class="slide level2">
-<h2><strong>CA in R</strong></h2>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="co"># Standardize to mean 0 and sd 1</span></span>
-<span id="cb29-2"><a></a>X_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(X)</span>
-<span id="cb29-3"><a></a></span>
-<span id="cb29-4"><a></a></span>
-<span id="cb29-5"><a></a><span class="co"># Elbow method: try k from 1 to 8</span></span>
-<span id="cb29-6"><a></a><span class="fu">set.seed</span>(<span class="dv">930</span>)</span>
-<span id="cb29-7"><a></a>wss <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="dv">8</span>)</span>
-<span id="cb29-8"><a></a></span>
-<span id="cb29-9"><a></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>) {</span>
-<span id="cb29-10"><a></a>  km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(X_scaled, <span class="at">centers =</span> k, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
-<span id="cb29-11"><a></a>  wss[k] <span class="ot">&lt;-</span> km<span class="sc">$</span>tot.withinss</span>
-<span id="cb29-12"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>, wss, <span class="at">type =</span> <span class="st">"b"</span>,</span>
-<span id="cb30-2"><a></a>     <span class="at">xlab =</span> <span class="st">"Number of clusters (k)"</span>,</span>
-<span id="cb30-3"><a></a>     <span class="at">ylab =</span> <span class="st">"Total within-cluster sum of squares"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="multivariate_workshop_in_R_files/figure-revealjs/unnamed-chunk-11-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">set.seed</span>(<span class="dv">930</span>)</span>
-<span id="cb31-2"><a></a>km3 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(X_scaled, <span class="at">centers =</span> <span class="dv">3</span>, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
-<span id="cb31-3"><a></a></span>
-<span id="cb31-4"><a></a><span class="co"># Add cluster labels to the dataset</span></span>
-<span id="cb31-5"><a></a>dat<span class="sc">$</span>Cluster <span class="ot">&lt;-</span> <span class="fu">factor</span>(km3<span class="sc">$</span>cluster)</span>
-<span id="cb31-6"><a></a></span>
-<span id="cb31-7"><a></a><span class="co"># How many fields per cluster?</span></span>
-<span id="cb31-8"><a></a><span class="fu">table</span>(dat<span class="sc">$</span>Cluster)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
- 1  2  3 
-61 86 33 </code></pre>
-</div>
-</div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="co"># Cluster means (interpretation table)</span></span>
-<span id="cb33-2"><a></a>cluster_means <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(X, <span class="at">by =</span> <span class="fu">list</span>(<span class="at">Cluster =</span> dat<span class="sc">$</span>Cluster), mean)</span>
-<span id="cb33-3"><a></a>cluster_means</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Cluster     SoilN    SoilP OrgMatter Moisture      NDVI
-1       1 24.544262 30.99508  3.032131 19.26393 0.8300000
-2       2 17.574419 21.19186  2.376395 19.27558 0.7587674
-3       3  8.336364 10.02121  1.757576 18.26364 0.6998182</code></pre>
-</div>
-</div>
-<div class="cell">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="co"># PCA only for plotting (not required for clustering)</span></span>
-<span id="cb35-2"><a></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(X_scaled, <span class="at">center =</span> <span class="cn">FALSE</span>, <span class="at">scale. =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb35-3"><a></a>scores <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(pca<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span>
-<span id="cb35-4"><a></a></span>
-<span id="cb35-5"><a></a><span class="fu">plot</span>(scores<span class="sc">$</span>PC1, scores<span class="sc">$</span>PC2,</span>
-<span id="cb35-6"><a></a>     <span class="at">pch =</span> <span class="dv">19</span>,</span>
-<span id="cb35-7"><a></a>     <span class="at">xlab =</span> <span class="st">"PC1"</span>, <span class="at">ylab =</span> <span class="st">"PC2"</span>,</span>
-<span id="cb35-8"><a></a>     <span class="at">main =</span> <span class="st">"PCA space (without cluster)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="multivariate_workshop_in_R_files/figure-revealjs/unnamed-chunk-14-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">plot</span>(scores<span class="sc">$</span>PC1, scores<span class="sc">$</span>PC2,</span>
-<span id="cb36-2"><a></a>     <span class="at">col =</span> dat<span class="sc">$</span>Cluster, <span class="at">pch =</span> <span class="dv">19</span>,</span>
-<span id="cb36-3"><a></a>     <span class="at">xlab =</span> <span class="st">"PC1"</span>, <span class="at">ylab =</span> <span class="st">"PC2"</span>,</span>
-<span id="cb36-4"><a></a>     <span class="at">main =</span> <span class="st">"Clusters shown in PCA space"</span>)</span>
-<span id="cb36-5"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(dat<span class="sc">$</span>Cluster),</span>
-<span id="cb36-6"><a></a>       <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">levels</span>(dat<span class="sc">$</span>Cluster)), <span class="at">pch =</span> <span class="dv">19</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="multivariate_workshop_in_R_files/figure-revealjs/unnamed-chunk-14-2.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
+<section id="ca-in-sas" class="slide level2">
+<h2><strong>CA in SAS</strong></h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb10-1"><a></a>/* Standardize variables to mean=0, sd=1 */</span>
+<span id="cb10-2"><a></a>proc stdize data=X out=X_scaled method=std;</span>
+<span id="cb10-3"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb10-4"><a></a>run;</span>
+<span id="cb10-5"><a></a></span>
+<span id="cb10-6"><a></a>/* Elbow method: run k-means for k = 1 to 8 and record within-cluster SS</span>
+<span id="cb10-7"><a></a>   PROC FASTCLUS performs k-means clustering in SAS */</span>
+<span id="cb10-8"><a></a>%macro elbow;</span>
+<span id="cb10-9"><a></a>  %do k = 1 %to 8;</span>
+<span id="cb10-10"><a></a>    proc fastclus data=X_scaled maxclusters=&amp;k out=clus_&amp;k outseed=seeds_&amp;k</span>
+<span id="cb10-11"><a></a>                  summary noprint;</span>
+<span id="cb10-12"><a></a>      var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb10-13"><a></a>    run;</span>
+<span id="cb10-14"><a></a>  %end;</span>
+<span id="cb10-15"><a></a>%mend elbow;</span>
+<span id="cb10-16"><a></a>%elbow;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb11-1"><a></a>/* Plot within-cluster sum of squares for each k</span>
+<span id="cb11-2"><a></a>   (Manually collect from PROC FASTCLUS summary output or use ODS OUTPUT) */</span>
+<span id="cb11-3"><a></a>data wss_table;</span>
+<span id="cb11-4"><a></a>  input k wss;</span>
+<span id="cb11-5"><a></a>  datalines;</span>
+<span id="cb11-6"><a></a>1 .</span>
+<span id="cb11-7"><a></a>2 .</span>
+<span id="cb11-8"><a></a>3 .</span>
+<span id="cb11-9"><a></a>4 .</span>
+<span id="cb11-10"><a></a>5 .</span>
+<span id="cb11-11"><a></a>6 .</span>
+<span id="cb11-12"><a></a>7 .</span>
+<span id="cb11-13"><a></a>8 .</span>
+<span id="cb11-14"><a></a>;</span>
+<span id="cb11-15"><a></a>run;</span>
+<span id="cb11-16"><a></a>/* Note: Replace the '.' values above with the within-cluster SS</span>
+<span id="cb11-17"><a></a>   printed by PROC FASTCLUS for each k, then run the plot below. */</span>
+<span id="cb11-18"><a></a></span>
+<span id="cb11-19"><a></a>proc sgplot data=wss_table;</span>
+<span id="cb11-20"><a></a>  series x=k y=wss / markers markerattrs=(symbol=circlefilled);</span>
+<span id="cb11-21"><a></a>  xaxis label="Number of clusters (k)";</span>
+<span id="cb11-22"><a></a>  yaxis label="Total within-cluster sum of squares";</span>
+<span id="cb11-23"><a></a>  title "Elbow Plot for K-Means Clustering";</span>
+<span id="cb11-24"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb12-1"><a></a>/* Fit k-means with k=3 */</span>
+<span id="cb12-2"><a></a>proc fastclus data=X_scaled maxclusters=3 out=clus_out seed=930;</span>
+<span id="cb12-3"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb12-4"><a></a>  title "K-Means Clustering with k=3";</span>
+<span id="cb12-5"><a></a>run;</span>
+<span id="cb12-6"><a></a></span>
+<span id="cb12-7"><a></a>/* Merge cluster labels back into original dataset */</span>
+<span id="cb12-8"><a></a>data dat_clus;</span>
+<span id="cb12-9"><a></a>  merge dat clus_out(keep=cluster rename=(cluster=Cluster));</span>
+<span id="cb12-10"><a></a>run;</span>
+<span id="cb12-11"><a></a></span>
+<span id="cb12-12"><a></a>/* How many fields per cluster? */</span>
+<span id="cb12-13"><a></a>proc freq data=dat_clus;</span>
+<span id="cb12-14"><a></a>  tables Cluster;</span>
+<span id="cb12-15"><a></a>  title "Observation Count per Cluster";</span>
+<span id="cb12-16"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb13-1"><a></a>/* Cluster means (interpretation table) */</span>
+<span id="cb13-2"><a></a>proc means data=dat_clus mean;</span>
+<span id="cb13-3"><a></a>  class Cluster;</span>
+<span id="cb13-4"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb13-5"><a></a>  title "Cluster Means for Each Variable";</span>
+<span id="cb13-6"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb14-1"><a></a>/* PCA scores for plotting clusters in 2D space */</span>
+<span id="cb14-2"><a></a>proc princomp data=X_scaled std ncomp=2 out=pca_plot_scores noprint;</span>
+<span id="cb14-3"><a></a>  var SoilN SoilP OrgMatter Moisture NDVI;</span>
+<span id="cb14-4"><a></a>run;</span>
+<span id="cb14-5"><a></a></span>
+<span id="cb14-6"><a></a>/* Merge PCA scores with cluster labels */</span>
+<span id="cb14-7"><a></a>data pca_clusters;</span>
+<span id="cb14-8"><a></a>  merge pca_plot_scores(keep=Prin1 Prin2) dat_clus(keep=Cluster);</span>
+<span id="cb14-9"><a></a>run;</span>
+<span id="cb14-10"><a></a></span>
+<span id="cb14-11"><a></a>/* PCA scatter plot WITHOUT cluster coloring */</span>
+<span id="cb14-12"><a></a>proc sgplot data=pca_clusters;</span>
+<span id="cb14-13"><a></a>  scatter x=Prin1 y=Prin2;</span>
+<span id="cb14-14"><a></a>  xaxis label="PC1";</span>
+<span id="cb14-15"><a></a>  yaxis label="PC2";</span>
+<span id="cb14-16"><a></a>  title "PCA Space (without cluster)";</span>
+<span id="cb14-17"><a></a>run;</span>
+<span id="cb14-18"><a></a></span>
+<span id="cb14-19"><a></a>/* PCA scatter plot WITH cluster coloring */</span>
+<span id="cb14-20"><a></a>proc sgplot data=pca_clusters;</span>
+<span id="cb14-21"><a></a>  scatter x=Prin1 y=Prin2 / group=Cluster markerattrs=(symbol=circlefilled);</span>
+<span id="cb14-22"><a></a>  xaxis label="PC1";</span>
+<span id="cb14-23"><a></a>  yaxis label="PC2";</span>
+<span id="cb14-24"><a></a>  title "Clusters shown in PCA Space";</span>
+<span id="cb14-25"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <aside class="notes">
 <p>Points with the same color are grouped as similar field profiles. Separation means clusters differ.</p>
 <style type="text/css">
@@ -1271,214 +929,13 @@ NDVI      -0.211  0.590</code></pre>
 <div class="columns" style="font-size: .7em;">
 <p>Clustering helps us find field types without a response variable. Then we summarize each cluster using the mean soil and NDVI values to create an interpretable story.</p>
 </div>
-</section>
-<section id="loading-data-in-sas" class="slide level2">
-<h2><strong>Loading data in SAS</strong></h2>
-<div class="sourceCode" id="cb37"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb37-1"><a></a>/* Read the CSV directly from GitHub */</span>
-<span id="cb37-2"><a></a>filename myurl url "https://raw.githubusercontent.com/aftabsorwar/STAT-930-workshop/refs/heads/main/iris.csv";</span>
-<span id="cb37-3"><a></a></span>
-<span id="cb37-4"><a></a>proc import datafile=myurl</span>
-<span id="cb37-5"><a></a>    out=iris</span>
-<span id="cb37-6"><a></a>    dbms=csv</span>
-<span id="cb37-7"><a></a>    replace;</span>
-<span id="cb37-8"><a></a>    guessingrows=max;</span>
-<span id="cb37-9"><a></a>run;</span>
-<span id="cb37-10"><a></a></span>
-<span id="cb37-11"><a></a>/* Quick look */</span>
-<span id="cb37-12"><a></a>proc contents data=iris;</span>
-<span id="cb37-13"><a></a>run;</span>
-<span id="cb37-14"><a></a></span>
-<span id="cb37-15"><a></a>proc print data=iris(obs=5);</span>
-<span id="cb37-16"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-232216850.png" width="600"></p>
-<p><img data-src="images/clipboard-1171872230.png"></p>
-<p><img data-src="images/clipboard-3058887160.png"></p>
-<div class="columns" style="font-size: .5em;">
-<p>This flower figures were uploaded by <a href="https://www.researchgate.net/profile/Gayan_De_Silva2">Gayan_De_Silva</a></p>
-</div>
-</section>
-<section id="pca-in-sas" class="slide level2">
-<h2><strong>PCA in SAS</strong></h2>
-<h4 id="correlation-matrix">Correlation Matrix</h4>
-<div class="sourceCode" id="cb38"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb38-1"><a></a>/* Correlation Heatmap */</span>
-<span id="cb38-2"><a></a>ods graphics on;</span>
-<span id="cb38-3"><a></a></span>
-<span id="cb38-4"><a></a>proc corr data=iris nosimple noprob plots=matrix(histogram);</span>
-<span id="cb38-5"><a></a>   var "Sepal.Length"n </span>
-<span id="cb38-6"><a></a>       "Sepal.Width"n </span>
-<span id="cb38-7"><a></a>       "Petal.Length"n </span>
-<span id="cb38-8"><a></a>       "Petal.Width"n;</span>
-<span id="cb38-9"><a></a>run;</span>
-<span id="cb38-10"><a></a></span>
-<span id="cb38-11"><a></a>ods graphics off;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-2109047777.png"></p>
-<p><img data-src="images/clipboard-506961605.png" width="800"></p>
-<div class="columns" style="font-size: .7em;">
-<ul>
-<li><p><strong>Petal.Length &amp; Petal.Width = 0.9629</strong> → extremely strong positive correlation</p></li>
-<li><p><strong>Sepal.Length strongly correlated with petal variables</strong> (≈ 0.82–0.87)</p></li>
-<li><p><strong>Sepal.Width negatively correlated</strong> with the others</p></li>
-</ul>
-</div>
-<h4 id="pca">PCA</h4>
-<div class="sourceCode" id="cb39"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb39-1"><a></a>/* PCA */</span>
-<span id="cb39-2"><a></a>ods graphics on;</span>
-<span id="cb39-3"><a></a></span>
-<span id="cb39-4"><a></a>proc princomp data=iris</span>
-<span id="cb39-5"><a></a>              out=iris_pca_scores</span>
-<span id="cb39-6"><a></a>              outstat=iris_pca_stat</span>
-<span id="cb39-7"><a></a>              std</span>
-<span id="cb39-8"><a></a>              plots=scree;</span>
-<span id="cb39-9"><a></a>   var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;</span>
-<span id="cb39-10"><a></a>run;</span>
-<span id="cb39-11"><a></a></span>
-<span id="cb39-12"><a></a>ods graphics off;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-911120988.png" width="600"></p>
-<p><img data-src="images/clipboard-1799299280.png" width="800"></p>
-<div class="columns" style="font-size: .7em;">
-<ul>
-<li><p>PC1 explains ~73% of total variation → very dominant.</p></li>
-<li><p>PC1 + PC2 explain ~96% → two components are enough.</p></li>
-<li><p>PC3 and PC4 contribute almost nothing.</p></li>
-</ul><p>So dimension can be reduced from 4 variables → 2 components safely.</p>
-</div>
-<p><img data-src="images/clipboard-1963586739.png" width="600"></p>
-<div class="columns" style="font-size: .7em;">
-<p>For PC1:</p><ul>
-<li><p>Strong positive loadings for <strong>petal variables</strong></p></li>
-<li><p>Moderate positive loading for Sepal.Length</p></li>
-<li><p>Negative for Sepal.Width</p></li>
-</ul><p>PC1 represents <strong>overall flower size (especially petal size)</strong>.</p>
-</div>
-<div class="columns" style="font-size: .7em;">
-<p>For PC2:</p><ul>
-<li><p>Dominated by <strong>Sepal.Width</strong></p></li>
-<li><p>Almost no contribution from petal variables</p></li>
-</ul><p>PC2 represents <strong>sepal width variation independent of petal size</strong>.</p>
-</div>
-<h4 id="bi-plot">Bi-plot</h4>
-<div class="sourceCode" id="cb40"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb40-1"><a></a>ods graphics on;</span>
-<span id="cb40-2"><a></a>proc princomp data=iris plots=(patternplot score(ncomp=2));</span>
-<span id="cb40-3"><a></a>    var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;</span>
-<span id="cb40-4"><a></a>    title "PCA – Biplot (Pattern + Score Plot)";</span>
-<span id="cb40-5"><a></a>run;</span>
-<span id="cb40-6"><a></a>ods graphics off;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-182386297.png" width="600"></p>
-<p><img data-src="images/clipboard-160036622.png" width="800"></p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb41-1"><a></a>proc sgplot data=iris_pca_scores;</span>
-<span id="cb41-2"><a></a>   scatter x=prin1 y=prin2 / group=Species;</span>
-<span id="cb41-3"><a></a>   xaxis label="PC1";</span>
-<span id="cb41-4"><a></a>   yaxis label="PC2";</span>
-<span id="cb41-5"><a></a>   title "PCA of Iris Data";</span>
-<span id="cb41-6"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-1641203757.png" width="799"></p>
-</section>
-<section id="ca-in-sas" class="slide level2">
-<h2><strong>CA in SAS</strong></h2>
-<div class="sourceCode" id="cb42"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb42-1"><a></a>/* Standardize the numeric variables */</span>
-<span id="cb42-2"><a></a>proc standard data=iris mean=0 std=1 out=iris_z;</span>
-<span id="cb42-3"><a></a>   var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;</span>
-<span id="cb42-4"><a></a>run;</span>
-<span id="cb42-5"><a></a></span>
-<span id="cb42-6"><a></a>/* To see first 5 observation */</span>
-<span id="cb42-7"><a></a>proc print data=iris_z(obs=5);</span>
-<span id="cb42-8"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-2680185136.png" width="600"></p>
-<div class="columns" style="font-size: .7em;">
-<p>We need to find optimum number of cluster to be considered for this analysis.</p>
-</div>
-<div class="sourceCode" id="cb43"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb43-1"><a></a>/* Elbow method (within-cluster variation) */</span>
-<span id="cb43-2"><a></a>%macro elbow(maxk=6);</span>
-<span id="cb43-3"><a></a></span>
-<span id="cb43-4"><a></a>data elbow_results;</span>
-<span id="cb43-5"><a></a>  length k 8 wcss 8;</span>
-<span id="cb43-6"><a></a>  stop;</span>
-<span id="cb43-7"><a></a>run;</span>
-<span id="cb43-8"><a></a></span>
-<span id="cb43-9"><a></a>%do k=1 %to &amp;maxk;</span>
-<span id="cb43-10"><a></a></span>
-<span id="cb43-11"><a></a>   /* Run k-means and save per-observation distance to its cluster center */</span>
-<span id="cb43-12"><a></a>   proc fastclus data=iris_z maxclusters=&amp;k maxiter=100 out=clusout noprint;</span>
-<span id="cb43-13"><a></a>      var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;</span>
-<span id="cb43-14"><a></a>   run;</span>
-<span id="cb43-15"><a></a></span>
-<span id="cb43-16"><a></a>   /* Compute WCSS = sum(distance^2) */</span>
-<span id="cb43-17"><a></a>   data clusout2;</span>
-<span id="cb43-18"><a></a>      set clusout;</span>
-<span id="cb43-19"><a></a></span>
-<span id="cb43-20"><a></a>      /* FASTCLUS usually creates DISTANCE. Some versions use _DIST_. */</span>
-<span id="cb43-21"><a></a>      dist = coalesce(DISTANCE, _DIST_);</span>
-<span id="cb43-22"><a></a>      dist2 = dist*dist;</span>
-<span id="cb43-23"><a></a>   run;</span>
-<span id="cb43-24"><a></a></span>
-<span id="cb43-25"><a></a>   proc sql noprint;</span>
-<span id="cb43-26"><a></a>      select sum(dist2) into :wcss from clusout2;</span>
-<span id="cb43-27"><a></a>   quit;</span>
-<span id="cb43-28"><a></a></span>
-<span id="cb43-29"><a></a>   data temp;</span>
-<span id="cb43-30"><a></a>      k = &amp;k;</span>
-<span id="cb43-31"><a></a>      wcss = &amp;wcss;</span>
-<span id="cb43-32"><a></a>   run;</span>
-<span id="cb43-33"><a></a></span>
-<span id="cb43-34"><a></a>   proc append base=elbow_results data=temp force;</span>
-<span id="cb43-35"><a></a>   run;</span>
-<span id="cb43-36"><a></a></span>
-<span id="cb43-37"><a></a>%end;</span>
-<span id="cb43-38"><a></a></span>
-<span id="cb43-39"><a></a>%mend;</span>
-<span id="cb43-40"><a></a></span>
-<span id="cb43-41"><a></a>%elbow(maxk=6);</span>
-<span id="cb43-42"><a></a></span>
-<span id="cb43-43"><a></a></span>
-<span id="cb43-44"><a></a>/* To see first 5 observation */</span>
-<span id="cb43-45"><a></a>proc print data=clusout(obs=5);</span>
-<span id="cb43-46"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-1690822838.png"></p>
-<p><img data-src="images/clipboard-3162895829.png" width="600"></p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb44-1"><a></a>/* Elbow plot */</span>
-<span id="cb44-2"><a></a>proc sgplot data=elbow_results;</span>
-<span id="cb44-3"><a></a>   series x=k y=wcss / markers;</span>
-<span id="cb44-4"><a></a>   xaxis label="Number of clusters (K)" integer;</span>
-<span id="cb44-5"><a></a>   yaxis label="WCSS (sum of squared within-cluster distances)";</span>
-<span id="cb44-6"><a></a>   title "Elbow Plot (Iris)";</span>
-<span id="cb44-7"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-1874552263.png" width="800"></p>
-<div class="columns" style="font-size: .7em;">
-<p>Proceed with the optimum cluster</p>
-</div>
-<div class="sourceCode" id="cb45"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb45-1"><a></a>/* Run K-means (K=3) */</span>
-<span id="cb45-2"><a></a>proc fastclus data=iris_z maxclusters=3 maxiter=100 out=iris_k3;</span>
-<span id="cb45-3"><a></a>   var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;</span>
-<span id="cb45-4"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-2526489861.png" width="800"></p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb46-1"><a></a>/* plotting the clusters */</span>
-<span id="cb46-2"><a></a>proc princomp data=iris_z out=iris_pca std;</span>
-<span id="cb46-3"><a></a>   var "Sepal.Length"n "Sepal.Width"n "Petal.Length"n "Petal.Width"n;</span>
-<span id="cb46-4"><a></a>run;</span>
-<span id="cb46-5"><a></a></span>
-<span id="cb46-6"><a></a>/* Combine cluster labels with PCA scores */</span>
-<span id="cb46-7"><a></a>data iris_pca_cluster;</span>
-<span id="cb46-8"><a></a>   merge iris_pca iris_k3(keep=cluster);</span>
-<span id="cb46-9"><a></a>run;</span>
-<span id="cb46-10"><a></a></span>
-<span id="cb46-11"><a></a>/* To see first 5 observation */</span>
-<span id="cb46-12"><a></a>proc print data=iris_pca_cluster(obs=5);</span>
-<span id="cb46-13"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-290851980.png" width="800"></p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode numberSource sas number-lines code-with-copy"><code class="sourceCode"><span id="cb47-1"><a></a>proc sgplot data=iris_pca_cluster;</span>
-<span id="cb47-2"><a></a>   scatter x=prin1 y=prin2 / group=cluster;</span>
-<span id="cb47-3"><a></a>   xaxis label="PC1";</span>
-<span id="cb47-4"><a></a>   yaxis label="PC2";</span>
-<span id="cb47-5"><a></a>   title "K-means Clusters on PCA Space";</span>
-<span id="cb47-6"><a></a>run;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img data-src="images/clipboard-109630825.png" width="800"></p>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
 </div>
 </div>
-</section>
+</section></section>
     </div>
   </div>
 
@@ -1691,82 +1148,6 @@ NDVI      -0.211  0.590</code></pre>
         ]
       });
     </script>
-    
-
-    <script>
-
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-
-      // slide changes (different for each slide format).
-
-      (function () {
-
-        // dispatch for htmlwidgets
-
-        function fireSlideEnter() {
-
-          const event = window.document.createEvent("Event");
-
-          event.initEvent("slideenter", true, true);
-
-          window.document.dispatchEvent(event);
-
-        }
-
-    
-
-        function fireSlideChanged(previousSlide, currentSlide) {
-
-          fireSlideEnter();
-
-    
-
-          // dispatch for shiny
-
-          if (window.jQuery) {
-
-            if (previousSlide) {
-
-              window.jQuery(previousSlide).trigger("hidden");
-
-            }
-
-            if (currentSlide) {
-
-              window.jQuery(currentSlide).trigger("shown");
-
-            }
-
-          }
-
-        }
-
-    
-
-        // hookup for slidy
-
-        if (window.w3c_slidy) {
-
-          window.w3c_slidy.add_observer(function (slide_num) {
-
-            // slide_num starts at position 1
-
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-
-          });
-
-        }
-
-    
-
-      })();
-
-    </script>
-
-    
-
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
